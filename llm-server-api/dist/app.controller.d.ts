@@ -7,6 +7,8 @@ export declare class AppResponse {
 }
 export declare class AppController {
     private readonly appService;
+    genAI: any;
+    model: any;
     constructor(appService: AppService);
     create(inputRequest: InputRequest): Promise<AppResponse>;
 }

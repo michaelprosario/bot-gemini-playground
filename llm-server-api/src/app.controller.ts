@@ -24,11 +24,43 @@ export class AppController {
   }
 
   @Post('chat1')
-  async create(@Body() inputRequest: InputRequest) : Promise<AppResponse> {
+  async chat(@Body() inputRequest: InputRequest) : Promise<AppResponse> {
     let response = new AppResponse();
     response.content = inputRequest.input;
 
     const prompt = inputRequest.input;
+
+    const result = await this.model.generateContent(prompt);
+    const modelResponse = await result.response;
+    const text = modelResponse.text();
+
+    response.content = text;
+    return response;
+  }   
+
+  @Post('spockChat')
+  async spockChat(@Body() inputRequest: InputRequest) : Promise<AppResponse> {
+    let response = new AppResponse();
+    response.content = inputRequest.input;
+
+    // amend this prompt so that gemini llm acts as Spock from Star Trek
+    const prompt = `Respond as Mr. Spock from Star Trek. Be logical, concise, and avoid emotional responses. Use formal language and reference Vulcan philosophy when appropriate. Limit responses to 5 sentences. User input: ${inputRequest.input}`;
+
+
+    const result = await this.model.generateContent(prompt);
+    const modelResponse = await result.response;
+    const text = modelResponse.text();
+
+    response.content = text;
+    return response;
+  }   
+
+  @Post('benFranklinChat')
+  async benFranklinChat(@Body() inputRequest: InputRequest) : Promise<AppResponse> {
+    let response = new AppResponse();
+    response.content = inputRequest.input;
+    
+    const prompt = `Respond as Ben Franklin. Limit responses to 7 sentences. User input: ${inputRequest.input}`;
 
     const result = await this.model.generateContent(prompt);
     const modelResponse = await result.response;

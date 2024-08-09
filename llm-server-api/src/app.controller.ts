@@ -69,4 +69,30 @@ export class AppController {
     response.content = text;
     return response;
   }   
+
+
+  @Post('robotController')
+  async robotController(@Body() inputRequest: InputRequest) : Promise<AppResponse> {
+    let response = new AppResponse();
+    response.content = inputRequest.input;
+    
+    const prompt = `
+    As a robot control system, I need you to listen for the following commands:
+    - When asked to move forward, say FORWARD and the number if provided
+    - When asked to move backward, say BACKWARD"  and the number if provided
+    - When asked to turn left or something similar, say TURN_LEFT
+    - When asked to turn right or something similar, say TURN_RIGHT
+    - Report ERROR if every other case.
+
+    Focus on this scope.  
+    User input: ${inputRequest.input}
+    `;
+
+    const result = await this.model.generateContent(prompt);
+    const modelResponse = await result.response;
+    const text = modelResponse.text();
+
+    response.content = text;
+    return response;
+  }    
 }

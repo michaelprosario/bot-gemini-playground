@@ -37,10 +37,50 @@ let AppController = class AppController {
         this.genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
         this.model = this.genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     }
-    async create(inputRequest) {
+    async chat(inputRequest) {
         let response = new AppResponse();
         response.content = inputRequest.input;
         const prompt = inputRequest.input;
+        const result = await this.model.generateContent(prompt);
+        const modelResponse = await result.response;
+        const text = modelResponse.text();
+        response.content = text;
+        return response;
+    }
+    async spockChat(inputRequest) {
+        let response = new AppResponse();
+        response.content = inputRequest.input;
+        const prompt = `Respond as Mr. Spock from Star Trek. Be logical, concise, and avoid emotional responses. Use formal language and reference Vulcan philosophy when appropriate. Limit responses to 5 sentences. User input: ${inputRequest.input}`;
+        const result = await this.model.generateContent(prompt);
+        const modelResponse = await result.response;
+        const text = modelResponse.text();
+        response.content = text;
+        return response;
+    }
+    async benFranklinChat(inputRequest) {
+        let response = new AppResponse();
+        response.content = inputRequest.input;
+        const prompt = `Respond as Ben Franklin. Limit responses to 7 sentences. User input: ${inputRequest.input}`;
+        const result = await this.model.generateContent(prompt);
+        const modelResponse = await result.response;
+        const text = modelResponse.text();
+        response.content = text;
+        return response;
+    }
+    async robotController(inputRequest) {
+        let response = new AppResponse();
+        response.content = inputRequest.input;
+        const prompt = `
+    As a robot control system, I need you to listen for the following commands:
+    - When asked to move forward, say FORWARD and the number if provided
+    - When asked to move backward, say BACKWARD"  and the number if provided
+    - When asked to turn left or something similar, say TURN_LEFT
+    - When asked to turn right or something similar, say TURN_RIGHT
+    - Report ERROR if every other case.
+
+    Focus on this scope.  
+    User input: ${inputRequest.input}
+    `;
         const result = await this.model.generateContent(prompt);
         const modelResponse = await result.response;
         const text = modelResponse.text();
@@ -55,7 +95,28 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [InputRequest]),
     __metadata("design:returntype", Promise)
-], AppController.prototype, "create", null);
+], AppController.prototype, "chat", null);
+__decorate([
+    (0, common_1.Post)('spockChat'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [InputRequest]),
+    __metadata("design:returntype", Promise)
+], AppController.prototype, "spockChat", null);
+__decorate([
+    (0, common_1.Post)('benFranklinChat'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [InputRequest]),
+    __metadata("design:returntype", Promise)
+], AppController.prototype, "benFranklinChat", null);
+__decorate([
+    (0, common_1.Post)('robotController'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [InputRequest]),
+    __metadata("design:returntype", Promise)
+], AppController.prototype, "robotController", null);
 exports.AppController = AppController = __decorate([
     (0, common_1.Controller)('app'),
     __metadata("design:paramtypes", [app_service_1.AppService])

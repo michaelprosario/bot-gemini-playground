@@ -1,0 +1,15 @@
+
+/* 
+format the chat message.
+Use css to style the chat message like a cool chat bubble.
+*/
+.divChatMessage{
+    display: flex;
+    flex-direction: column;
+    margin: 10px;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #f1f1f1;
+    max-width: 80%;
+    word-wrap: break-word;
+}

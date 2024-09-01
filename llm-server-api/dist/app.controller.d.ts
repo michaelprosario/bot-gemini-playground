@@ -10,5 +10,8 @@ export declare class AppController {
     genAI: any;
     model: any;
     constructor(appService: AppService);
-    create(inputRequest: InputRequest): Promise<AppResponse>;
+    chat(inputRequest: InputRequest): Promise<AppResponse>;
+    spockChat(inputRequest: InputRequest): Promise<AppResponse>;
+    benFranklinChat(inputRequest: InputRequest): Promise<AppResponse>;
+    robotController(inputRequest: InputRequest): Promise<AppResponse>;
 }

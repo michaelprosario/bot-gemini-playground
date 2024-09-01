@@ -2,18 +2,23 @@
   <div class="card-body">
     <h5 class="card-title">Chat view 1</h5>
     <!-- Create space to display chat messages-->
-    <div class="chat-box">
+    <div class="chat-box" id="divMessages">
       <div *ngFor="let message of messages">
         <div class="message">
-          <div class="message-header">
-            <span class="message-sender">{{ message.sender }}</span>
-            <span class="message-time">{{ message.time }}</span>
-          </div>
-          <div class="message-content">
-            {{ message.content }}
-          </div>
+
+          <app-chat-message
+            [content]="message.content"
+            [sender]="message.sender"
+            [time]="message.time"
+            >
+          </app-chat-message>
+          
+          
         </div>
       </div>
+
+  </div>
+
       <!-- Create space so that user can type messages to LLM -->
       <div class="chat-input">
         <input
@@ -24,5 +29,6 @@
         />
         <button class="btn btn-primary" (click)="sendMessage()">Send</button>
     </div>
-  </div>
 </div>
+
+

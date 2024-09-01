@@ -48,10 +48,14 @@ export class ChatView1Component {
   // write method to make http POST request to localhost:3000/app/benFranklinChat
   // The input to this method will accept a string message
   chatUrl: string = '/app/benFranklinChat';
-  async executeBenFranklinChat(message: IChatCommand) {
+  async benFranklinChat(message: IChatCommand) {
     return await this.httpClient.post(this.chatUrl, message).toPromise();
   }
 
+  chatUrl2: string = '/app/spockChat';
+  async spockChat(message: IChatCommand) {
+    return await this.httpClient.post(this.chatUrl2, message).toPromise();
+  }
 
   async sendMessage() 
   {
@@ -68,11 +72,11 @@ export class ChatView1Component {
     const chatCommand: IChatCommand = {
       input: this.messageContent
     }
-    let chatResponse = await this.executeBenFranklinChat(chatCommand) as IChatResponse;
+    let chatResponse = await this.spockChat(chatCommand) as IChatResponse;
 
     // create message object with sender, content, and time
     const responseMessage: IMessage = {
-      sender: 'BenFranklin',
+      sender: 'Spock',
       content: chatResponse.content,
       time: new Date().toLocaleTimeString()
     }
@@ -82,8 +86,15 @@ export class ChatView1Component {
     // clear the message content
     this.messageContent = '';
 
-    // scroll the divChatBox to the bottom
+    // set focus on chatInput
+    setTimeout(() => {
+      const chatInput = document.getElementById('chatInput');
+      if (chatInput) {
+        chatInput.focus();
+      }
+    }, 0);
 
+    // scroll the divChatBox to the bottom
     setTimeout(() => {
       const divMessages = document.getElementById('divMessages');
       if (divMessages) {

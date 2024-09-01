@@ -16,7 +16,7 @@ exports.AppController = exports.AppResponse = exports.InputRequest = void 0;
 const common_1 = require("@nestjs/common");
 const app_service_1 = require("./app.service");
 const swagger_1 = require("@nestjs/swagger");
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+const generative_ai_1 = require("@google/generative-ai");
 class InputRequest {
 }
 exports.InputRequest = InputRequest;
@@ -34,11 +34,11 @@ __decorate([
 let AppController = class AppController {
     constructor(appService) {
         this.appService = appService;
-        this.genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
-        this.model = this.genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        this.genAI = new generative_ai_1.GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
+        this.model = this.genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
     }
     async chat(inputRequest) {
-        let response = new AppResponse();
+        const response = new AppResponse();
         response.content = inputRequest.input;
         const prompt = inputRequest.input;
         const result = await this.model.generateContent(prompt);
@@ -48,7 +48,7 @@ let AppController = class AppController {
         return response;
     }
     async spockChat(inputRequest) {
-        let response = new AppResponse();
+        const response = new AppResponse();
         response.content = inputRequest.input;
         const prompt = `Respond as Mr. Spock from Star Trek. Be logical, concise, and avoid emotional responses. Use formal language and reference Vulcan philosophy when appropriate. Limit responses to 5 sentences. User input: ${inputRequest.input}`;
         const result = await this.model.generateContent(prompt);
@@ -58,7 +58,7 @@ let AppController = class AppController {
         return response;
     }
     async benFranklinChat(inputRequest) {
-        let response = new AppResponse();
+        const response = new AppResponse();
         response.content = inputRequest.input;
         const prompt = `Respond as Ben Franklin. Limit responses to 7 sentences. User input: ${inputRequest.input}`;
         const result = await this.model.generateContent(prompt);
@@ -68,7 +68,7 @@ let AppController = class AppController {
         return response;
     }
     async robotController(inputRequest) {
-        let response = new AppResponse();
+        const response = new AppResponse();
         response.content = inputRequest.input;
         const prompt = `
     As a robot control system, I need you to listen for the following commands:

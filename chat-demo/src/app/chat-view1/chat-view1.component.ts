@@ -18,8 +18,6 @@ export class ChatView1Component {
   @Input() agentName: string = 'Unknown';
   messages: IMessage[] = [];
   messageContent: string = '';
-  benFrankLinChatUrl: string = '/app/benFranklinChat';
-  spockChatUrl: string = '/app/spockChat';
 
   constructor(private httpClient: HttpClient) { }
 

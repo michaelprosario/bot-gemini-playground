@@ -27,7 +27,7 @@ export class BenFranklinChatService implements IChatService
 @Injectable()
 export class SpockChatService implements IChatService
 {
-    private benFrankLinChatUrl: string = '/app/benFranklinChat';
+    private benFrankLinChatUrl: string = '/app/spockChat';
     private httpClient: HttpClient;
 
     constructor(httpClient: HttpClient)

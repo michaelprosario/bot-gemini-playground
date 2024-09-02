@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ChatMessageComponent } from '../chat-message/chat-message.component';
 import { IMessage, IChatCommand, IChatResponse } from './chat-view-interfaces';
+import { IChatService } from './chat-services';
 
 @Component({
   selector: 'app-chat-view1',
@@ -13,6 +14,8 @@ import { IMessage, IChatCommand, IChatResponse } from './chat-view-interfaces';
   styleUrl: './chat-view1.component.scss'
 })
 export class ChatView1Component {
+  @Input() chatService: IChatService | undefined;
+  @Input() agentName: string = 'Unknown';
   messages: IMessage[] = [];
   messageContent: string = '';
   benFrankLinChatUrl: string = '/app/benFranklinChat';
@@ -33,14 +36,6 @@ export class ChatView1Component {
     });
   }
 
-  async benFranklinChat(message: IChatCommand) {
-    return await this.httpClient.post(this.benFrankLinChatUrl, message).toPromise();
-  }
-
-  async spockChat(message: IChatCommand) {
-    return await this.httpClient.post(this.spockChatUrl, message).toPromise();
-  }
-
   getMessageFromUser() : IMessage{
     const message: IMessage = {
       sender: 'Me',
@@ -58,17 +53,21 @@ export class ChatView1Component {
     this.messages.push(message);
 
     const chatCommand: IChatCommand = this.makeChatCommand()
-    let chatResponse = await this.benFranklinChat(chatCommand) as IChatResponse;
 
-    const responseMessage: IMessage = {
-      sender: 'Ben',
-      content: chatResponse.content,
-      time: new Date().toLocaleTimeString()
+    if(this.chatService)
+    {
+      let chatResponse = await this.chatService.executeChatCommand(chatCommand) as IChatResponse;
+
+      const responseMessage: IMessage = {
+        sender: this.agentName,
+        content: chatResponse.content,
+        time: new Date().toLocaleTimeString()
+      }
+  
+      this.messages.push(responseMessage);
+  
+      this.resetChatView();  
     }
-
-    this.messages.push(responseMessage);
-
-    this.resetChatView();
   }
 
   private resetChatView() {

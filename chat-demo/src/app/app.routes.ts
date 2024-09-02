@@ -1,6 +1,10 @@
 import { Routes } from '@angular/router';
-import { ChatView1Component } from './chat-view1/chat-view1.component';
+import { SpockChatViewComponent } from './spock-chat-view/spock-chat-view.component';
+import { BenFranklinViewComponent } from './ben-franklin-view/ben-franklin-view.component';
 
 export const routes: Routes = [
-    { path: '', component: ChatView1Component },
+    { path: '', component: SpockChatViewComponent },
+    { path: 'ben', component: BenFranklinViewComponent },
+    { path: 'spock', component: SpockChatViewComponent },
+
 ];

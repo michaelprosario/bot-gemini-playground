@@ -1,11 +1,13 @@
 import { HttpClient } from "@angular/common/http";
 import { IChatCommand, IChatResponse } from "./chat-view-interfaces";
+import { Injectable } from "@angular/core";
 
 export interface IChatService
 {
     executeChatCommand(message: IChatCommand): Promise<IChatResponse>;
 }
 
+@Injectable()
 export class BenFranklinChatService implements IChatService
 {
     private benFrankLinChatUrl: string = '/app/benFranklinChat';
@@ -21,7 +23,8 @@ export class BenFranklinChatService implements IChatService
         return await this.httpClient.post(this.benFrankLinChatUrl, message).toPromise() as IChatResponse;
     }
 }
-
+   
+@Injectable()
 export class SpockChatService implements IChatService
 {
     private benFrankLinChatUrl: string = '/app/benFranklinChat';

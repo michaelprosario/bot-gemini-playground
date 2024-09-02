@@ -1,6 +1,9 @@
 <div class="card">
   <div class="card-body">
-    <h5 class="card-title">Chat view 1</h5>
+    <h5 class="card-title">
+      <!-- display agent name here-->
+      {{agentName}} Chat
+    </h5>
     <!-- Create space to display chat messages-->
     <div class="chat-box" id="divMessages">
       <div *ngFor="let message of messages">

@@ -3,20 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ChatMessageComponent } from '../chat-message/chat-message.component';
-
-interface IMessage {
-  sender: string;
-  content: string;
-  time: string;
-}
-
-interface IChatCommand {
-  input: string;
-}
-
-interface IChatResponse {
-  content: string;
-}
+import { IMessage, IChatCommand, IChatResponse } from './chat-view-interfaces';
 
 @Component({
   selector: 'app-chat-view1',
@@ -26,18 +13,19 @@ interface IChatResponse {
   styleUrl: './chat-view1.component.scss'
 })
 export class ChatView1Component {
-
-  // create a list of messages using IMessage interface.  Make 5 messages
-  messages: IMessage[] = [
-
-  ];
+  messages: IMessage[] = [];
   messageContent: string = '';
+  benFrankLinChatUrl: string = '/app/benFranklinChat';
+  spockChatUrl: string = '/app/spockChat';
 
   constructor(private httpClient: HttpClient) { }
 
-  ngOnInit() {
+  ngOnInit() 
+  {
+    this.onEnterSendMessage();
+  }
 
-    // when the user presses the enter key, send the message
+  private onEnterSendMessage() {
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Enter') {
         this.sendMessage();
@@ -45,48 +33,47 @@ export class ChatView1Component {
     });
   }
 
-  // write method to make http POST request to localhost:3000/app/benFranklinChat
-  // The input to this method will accept a string message
-  chatUrl: string = '/app/benFranklinChat';
   async benFranklinChat(message: IChatCommand) {
-    return await this.httpClient.post(this.chatUrl, message).toPromise();
+    return await this.httpClient.post(this.benFrankLinChatUrl, message).toPromise();
   }
 
-  chatUrl2: string = '/app/spockChat';
   async spockChat(message: IChatCommand) {
-    return await this.httpClient.post(this.chatUrl2, message).toPromise();
+    return await this.httpClient.post(this.spockChatUrl, message).toPromise();
   }
 
-  async sendMessage() 
-  {
-    // create message object with sender, content, and time
+  getMessageFromUser() : IMessage{
     const message: IMessage = {
       sender: 'Me',
       content: this.messageContent,
       time: new Date().toLocaleTimeString()
     } 
+
+    return message;
+  }
+
+  async sendMessage() 
+  {
+    const message = this.getMessageFromUser();
     
     this.messages.push(message);
 
-    // create chat command object with input
-    const chatCommand: IChatCommand = {
-      input: this.messageContent
-    }
-    let chatResponse = await this.spockChat(chatCommand) as IChatResponse;
+    const chatCommand: IChatCommand = this.makeChatCommand()
+    let chatResponse = await this.benFranklinChat(chatCommand) as IChatResponse;
 
-    // create message object with sender, content, and time
     const responseMessage: IMessage = {
-      sender: 'Spock',
+      sender: 'Ben',
       content: chatResponse.content,
       time: new Date().toLocaleTimeString()
     }
 
     this.messages.push(responseMessage);
 
-    // clear the message content
+    this.resetChatView();
+  }
+
+  private resetChatView() {
     this.messageContent = '';
 
-    // set focus on chatInput
     setTimeout(() => {
       const chatInput = document.getElementById('chatInput');
       if (chatInput) {
@@ -94,7 +81,6 @@ export class ChatView1Component {
       }
     }, 0);
 
-    // scroll the divChatBox to the bottom
     setTimeout(() => {
       const divMessages = document.getElementById('divMessages');
       if (divMessages) {
@@ -105,5 +91,11 @@ export class ChatView1Component {
         }
       }
     }, 0);
+  }
+
+  private makeChatCommand(): IChatCommand {
+    return {
+      input: this.messageContent
+    };
   }
 }

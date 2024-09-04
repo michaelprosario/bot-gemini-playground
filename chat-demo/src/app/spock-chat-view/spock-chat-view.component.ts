@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ChatView1Component } from '../chat-view1/chat-view1.component';
-import { SpockChatService } from '../chat-view1/chat-services';
+import { SpockChatService } from "../chat-view1/SpockChatService";
 import { HttpClient } from '@angular/common/http';
 
 @Component({

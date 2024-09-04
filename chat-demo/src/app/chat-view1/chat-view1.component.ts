@@ -3,8 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ChatMessageComponent } from '../chat-message/chat-message.component';
-import { IMessage, IChatCommand, IChatResponse } from './chat-view-interfaces';
-import { IChatService } from './chat-services';
+import { IMessage, IChatCommand, IChatResponse, ContentItem } from '../core/chat-view-interfaces';
+import { IChatService } from "../core/IChatService";
 
 @Component({
   selector: 'app-chat-view1',
@@ -17,6 +17,7 @@ export class ChatView1Component {
   @Input() chatService: IChatService | undefined;
   @Input() agentName: string = 'Unknown';
   messages: IMessage[] = [];
+  contentItems: ContentItem[] = [];
   messageContent: string = '';
 
   constructor(private httpClient: HttpClient) { }
@@ -36,7 +37,7 @@ export class ChatView1Component {
 
   getMessageFromUser() : IMessage{
     const message: IMessage = {
-      sender: 'Me',
+      sender: 'user',
       content: this.messageContent,
       time: new Date().toLocaleTimeString()
     } 
@@ -46,9 +47,16 @@ export class ChatView1Component {
 
   async sendMessage() 
   {
-    const message = this.getMessageFromUser();
-    
+    const message: IMessage = this.getMessageFromUser();    
     this.messages.push(message);
+
+    // create content item for history
+    const contentItem: ContentItem = {
+      role: 'user',
+      parts: [{ text: this.messageContent }]
+    }
+
+    this.contentItems.push(contentItem);
 
     const chatCommand: IChatCommand = this.makeChatCommand()
 
@@ -63,6 +71,14 @@ export class ChatView1Component {
       }
   
       this.messages.push(responseMessage);
+
+      // create content item for history for model response
+      const contentItem: ContentItem = {
+        role: 'model',
+        parts: [{ text: chatResponse.content }]
+      }
+
+      this.contentItems.push(contentItem);
   
       this.resetChatView();  
     }
@@ -92,7 +108,8 @@ export class ChatView1Component {
 
   private makeChatCommand(): IChatCommand {
     return {
-      input: this.messageContent
+      input: this.messageContent,
+      contentItems: this.contentItems
     };
   }
 }

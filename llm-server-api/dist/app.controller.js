@@ -12,11 +12,29 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AppController = exports.AppResponse = exports.InputRequest = void 0;
+exports.AppController = exports.AppResponse = exports.InputRequest = exports.ContentItemPart = exports.ContentItem = void 0;
 const common_1 = require("@nestjs/common");
 const app_service_1 = require("./app.service");
 const swagger_1 = require("@nestjs/swagger");
 const generative_ai_1 = require("@google/generative-ai");
+class ContentItem {
+}
+exports.ContentItem = ContentItem;
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
+], ContentItem.prototype, "role", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", Array)
+], ContentItem.prototype, "parts", void 0);
+class ContentItemPart {
+}
+exports.ContentItemPart = ContentItemPart;
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
+], ContentItemPart.prototype, "text", void 0);
 class InputRequest {
 }
 exports.InputRequest = InputRequest;
@@ -24,6 +42,10 @@ __decorate([
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], InputRequest.prototype, "input", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", Array)
+], InputRequest.prototype, "contentItems", void 0);
 class AppResponse {
 }
 exports.AppResponse = AppResponse;
@@ -62,6 +84,23 @@ let AppController = class AppController {
         response.content = inputRequest.input;
         const prompt = `Respond as Ben Franklin. Limit responses to 7 sentences. User input: ${inputRequest.input}`;
         const result = await this.model.generateContent(prompt);
+        const modelResponse = await result.response;
+        const text = modelResponse.text();
+        response.content = text;
+        return response;
+    }
+    async marketingAdvisorChat(inputRequest) {
+        const response = new AppResponse();
+        response.content = inputRequest.input;
+        const prompt = `Respond as marketing advisor. Respond in paragraph form.  User input: ${inputRequest.input}`;
+        const systemContentItem = {
+            role: 'model',
+            parts: [{ text: prompt }],
+        };
+        inputRequest.contentItems.unshift(systemContentItem);
+        const result = await this.model.generateContent({
+            contents: inputRequest.contentItems,
+        });
         const modelResponse = await result.response;
         const text = modelResponse.text();
         response.content = text;
@@ -110,6 +149,13 @@ __decorate([
     __metadata("design:paramtypes", [InputRequest]),
     __metadata("design:returntype", Promise)
 ], AppController.prototype, "benFranklinChat", null);
+__decorate([
+    (0, common_1.Post)('marketingAdvisorChat'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [InputRequest]),
+    __metadata("design:returntype", Promise)
+], AppController.prototype, "marketingAdvisorChat", null);
 __decorate([
     (0, common_1.Post)('robotController'),
     __param(0, (0, common_1.Body)()),

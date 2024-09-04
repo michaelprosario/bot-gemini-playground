@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { BenFranklinChatService } from '../chat-view1/chat-services';
+import { BenFranklinChatService } from "./BenFranklinChatService";
 import { HttpClient } from '@angular/common/http';
 import { ChatView1Component } from '../chat-view1/chat-view1.component';
 

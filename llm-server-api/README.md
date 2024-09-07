@@ -71,3 +71,15 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+
+## How do you run llm-server-api?
+- Open bash terminal
+- Navigate to project folder
+- Obtain Gemini api key here: https://ai.google.dev/aistudio
+
+```
+export GOOGLE_API_KEY="YOUR KEY GOES HERE"
+npm install
+npm start
+```

@@ -70,11 +70,12 @@ export class AppController {
     this.model = this.genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
   }
 ```
+In the code above, we need leverage the GOOGLE_API_KEY environment variable to construct a gemini-1.5-flash model.
+In a more refined solution, I would recommend wrapping the Gemini API in a NestJS service that you design.   Using this service, you can inject the service into this controller.  For simplicity, we'll continue using the raw Gemini API.
 
 ### Setup Spock API
 
-In the code above, we need leverage the GOOGLE_API_KEY environment variable to construct a gemini-1.5-flash model.
-In a more refined solution, I would recommend wrapping the Gemini API in a NestJS service that you design.   Using this service, you can inject the service into this controller.  For simplicity, we'll continue using the raw Gemini API.
+Let's add a controller method to respond as Spock.
 
 ``` typescript 
   @Post('spockChat')
@@ -99,7 +100,6 @@ In a more refined solution, I would recommend wrapping the Gemini API in a NestJ
 - *Prompt Creation*: A prompt string is created to instruct the language model to respond as Mr. Spock. 
 - *Content Generation*: The method calls this.model.generateContent(prompt) to generate a response based on the prompt. 
 - *Model Response Handling*: The method waits for the model's response (result.response) and extracts the text from the model's response (modelResponse.text()).
-
 
 ### Chat with spock
 
@@ -128,7 +128,7 @@ Sounds pretty Spock like to me!
 
 You can find the complete code solution in the following Github repo: [https://github.com/michaelprosario/bot-gemini-playground](https://github.com/michaelprosario/bot-gemini-playground)
 
-In the app.controller.ts, you'll see some other experiments.  You can talk to Ben Franklin or talk to marketing advisor.  Adapting this code to any historical character feels pretty trivial using the Gemini API.
+In the app.controller.ts, you'll see some other experiments.  You can talk to Ben Franklin or talk to a marketing advisor.  Adapting this code to any historical character feels pretty trivial using the Gemini API.  I feel that's pretty amazing honestly.
 
 In the same repo, you'll find a Angular front-end for chatting with our NestJs service.  Please refer to the "chat-demo" folder.
 
